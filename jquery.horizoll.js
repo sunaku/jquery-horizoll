@@ -106,7 +106,7 @@ $(function() {
     return !(
       // event originated from a form input field, so don't interfere:
       // the user is probably trying to enter text or scroll the field
-      (event.target && event.target.form) ||
+      $(event.target).is(':input') ||
 
       // modifier was pressed along with keystroke, so don't interfere
       event.altKey || event.ctrlKey || event.metaKey ||
