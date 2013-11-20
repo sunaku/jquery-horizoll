@@ -78,9 +78,16 @@ $(function() {
   // Aligns the screen to the nearest page boundary
   // while ensuring that any hash target is visible.
   function realign() {
-    var target = $(':target');
-    if (target.length) {
-      horizoll(target.offset().left);
+    if (window.location.hash.length > 1) {
+      var target = $(':target,' + window.location.hash);
+      if (target.length) {
+        horizoll(target.offset().left);
+      }
+      else {
+        // hash was specified in URL but no DOM in document matched so retry
+        // after some time because matching DOM might be created dynamically
+        setTimeout(realign, 1000);
+      }
     }
     else {
       horizoll('align');
