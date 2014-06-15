@@ -14,7 +14,7 @@ Requirements
 Requires: jQuery 1.2.6 or newer
 http://docs.jquery.com/Release:jQuery_1.2.6
 
-Optional: jquery-mousewheel 3.1.3 or newer
+Optional: jquery-mousewheel 3.1.5 or newer
 https://github.com/brandonaaron/jquery-mousewheel
 
 Usage
