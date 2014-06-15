@@ -102,7 +102,7 @@ $(function() {
   }
 
   // traverse page boundaries using the keyboard
-  $document.bind('keyup', function(event) {
+  $document.bind('keydown', function(event) {
     if (// modifier was pressed along with keystroke, so don't interfere
         !event.altKey && !event.ctrlKey && !event.metaKey &&
 
@@ -113,6 +113,7 @@ $(function() {
         qualify(event)
     )
     {
+      event.preventDefault();
       switch (event.keyCode) {
         case PRIOR:
         case LEFT:
@@ -147,6 +148,7 @@ $(function() {
     // which give us fractional scroll velocity (event.deltaFactor) values
     if (!wheeling && (event.deltaFactor % 1 === 0) && qualify(event)) {
       wheeling = true;
+      event.preventDefault();
 
       var direction =
         (event.deltaX === 0 && event.deltaY > 0) || // mousewheel up
