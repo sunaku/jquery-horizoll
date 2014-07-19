@@ -3,6 +3,7 @@ jquery.horizoll.js
 
 Keyboard and mouse enabled horizontal screen
 scrolling plugin, with automatic realignment.
+See it in action at https://sunaku.github.io/
 
 Written in 2013 by Suraj N. Kurapati for
 Readably https://github.com/sunaku/readably
