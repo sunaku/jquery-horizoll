@@ -159,7 +159,7 @@ $(function() {
   });
 
   // traverse page boundaries using the mouse wheel
-  $document.on('mousewheel', function(event) {
+  $document.bind('mousewheel', function(event) {
     // ignore wheel events from smooth scrolling devices such as touchpads,
     // which give us fractional scroll velocity (event.deltaFactor) values
     if (event.deltaFactor % 1 !== 0) {
