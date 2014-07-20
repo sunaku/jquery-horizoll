@@ -31,7 +31,7 @@ $(function() {
       $html     = $('html'),
       $body     = $('body'),
       $screen   = $('html,body'),
-      wheeling  = false,
+      scrolling = false,
       SPACE     = 32, // space bar
       PRIOR     = 33, // page up
       NEXT      = 34, // page down
@@ -60,6 +60,10 @@ $(function() {
     // scrolling is unnecessary: there's nothing here to be scrolled!
     if ($document.width() <= $window.width()) return;
 
+    // we are already in the process of scrolling to the given location
+    if (scrolling === where) return;
+    scrolling = where;
+
     var start = typeof where === 'number' ? where : $document.scrollLeft(),
         limit = $body.width(),
         depth = start % limit,
@@ -73,6 +77,13 @@ $(function() {
       default     : where = start - depth;
     }
 
+    if (!options) options = {};
+    var complete = options.complete;
+    options.complete = function() {
+      scrolling = false;
+      if (complete) complete();
+    }
+    options.queue = false;
     $screen.animate({ scrollLeft: where }, options);
   }
 
@@ -114,31 +125,35 @@ $(function() {
         qualify(event)
     )
     {
-      event.preventDefault();
+      var where = null;
       switch (event.keyCode) {
         case PRIOR:
         case LEFT:
         case UP:
-          horizoll('left');
+          where = 'left';
           break;
 
         case NEXT:
         case RIGHT:
         case DOWN:
-          horizoll('right');
+          where = 'right';
           break;
 
         case SPACE:
-          horizoll(event.shiftKey ? 'left' : 'right');
+          where = event.shiftKey ? 'left' : 'right';
           break;
 
         case HOME:
-          horizoll(0);
+          where = 0;
           break;
 
         case END:
-          horizoll($document.width());
+          where = $document.width();
           break;
+      }
+      if (where !== null) {
+        event.preventDefault();
+        horizoll(where);
       }
     }
   });
@@ -160,8 +175,7 @@ $(function() {
       // resulted from our imperfect smooth scrolling detection logic above
       $screen.stop(true, false);
     }
-    else if (!wheeling && qualify(event)) {
-      wheeling = true;
+    else if (qualify(event)) {
       event.preventDefault();
 
       var direction =
@@ -169,7 +183,7 @@ $(function() {
         (event.deltaY === 0 && event.deltaX < 0)    // mousewheel left
         ? 'left' : 'right';
 
-      horizoll(direction, { complete: function() { wheeling = false; } });
+      horizoll(direction);
     }
   });
 
