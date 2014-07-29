@@ -31,7 +31,6 @@ $(function() {
       $html     = $('html'),
       $body     = $('body'),
       $screen   = $('html,body'),
-      wheeledAt = 0,
       scrolling = false,
       SPACE     = 32, // space bar
       PRIOR     = 33, // page up
@@ -116,14 +115,13 @@ $(function() {
 
   // traverse page boundaries using the keyboard
   $document.bind('keydown', function(event) {
-    if (// modifier was pressed along with keystroke, so don't interfere
-        !event.altKey && !event.ctrlKey && !event.metaKey &&
+    if (qualify(event) &&
 
-        // shift was pressed with a non-space-bar key, so don't interfere
-        !(event.shiftKey && event.keyCode !== SPACE) &&
+      // modifier was pressed along with keystroke, so don't interfere
+      !event.altKey && !event.ctrlKey && !event.metaKey &&
 
-        // qualify this event further before proceeding to take any action
-        qualify(event)
+      // shift was pressed with a non-space-bar key, so don't interfere
+      !(event.shiftKey && event.keyCode !== SPACE)
     )
     {
       var where = null;
@@ -162,24 +160,12 @@ $(function() {
 
   // traverse page boundaries using the mouse wheel
   $document.bind('mousewheel', function(event) {
-    // we are only interested in scroll wheels that travel along Y axis
-    if (qualify(event) && event.deltaY !== 0) {
+    // ignore touchpad swipes that travel along _both_ Y and X axes!
+    if (qualify(event) && event.deltaY !== 0 && event.deltaX === 0) {
       event.stopPropagation();
       event.preventDefault();
-      if (
-          // ignore touchpad swipes that travel along _both_ Y and X axes!
-          event.deltaX === 0 &&
-
-          // ignore touchpads swipes that produce extreme/fractional deltas
-          event.deltaFactor == 16 &&
-
-          // ignore redundant event spam that we get after touchpads swipes
-          event.timeStamp - wheeledAt > 50
-      ) {
-        horizoll(event.deltaY > 0 ? 'left' : 'right');
-      }
+      horizoll(event.deltaY > 0 ? 'left' : 'right');
     }
-    wheeledAt = event.timeStamp;
   });
 
   // automatically realign to nearest page boundary
