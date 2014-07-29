@@ -30,7 +30,7 @@ $(function() {
       $window   = $(window),
       $html     = $('html'),
       $body     = $('body'),
-      $screen   = $('html,body'),
+      $screen   = /WebKit/.test(navigator.userAgent) ? $body : $html,
       scrolling = false,
       SPACE     = 32, // space bar
       PRIOR     = 33, // page up
